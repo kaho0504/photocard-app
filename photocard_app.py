@@ -39,7 +39,7 @@ def today_str():
 
 
 def pair_combos(gid):
-    return [f"{a}・{b}" for a, b in combinations(MEMBERS[gid], 2)]
+    return [f"{a}×{b}" for a, b in combinations(MEMBERS[gid], 2)]
 
 
 # ---------- 保存／読み込み ----------
@@ -210,8 +210,12 @@ def add_dialog():
         ptype = draft["type"]
 
         if ptype == "pair":
-            st.write(f"{g['name']} ・ ペア（全{len(pair_combos(draft['group']))}組み合わせ）")
+            combos = pair_combos(draft["group"])
+            st.write(f"{g['name']} ・ ペア（{len(combos)}組）")
             st.caption("品番は空欄でもOK（あとで編集ボタンから1件ずつ入力できます）")
+            with st.expander("追加されるペア一覧を見る", expanded=False):
+                for combo in combos:
+                    st.write(combo)
         else:
             st.write(f"{g['name']} ・ {draft['member']}")
 
