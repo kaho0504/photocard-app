@@ -371,7 +371,10 @@ elif st.session_state.filter_step == "member":
 # =====================================================================
 def render_card(c, show_edit_delete=True):
     g = group_of(c["group"])
-    col_main, col_heart, col_edit, col_del = st.columns([6, 1, 1, 1]) if show_edit_delete else st.columns([6, 1])
+    if show_edit_delete:
+        col_main, col_heart, col_edit, col_del = st.columns([6, 1, 1, 1])
+    else:
+        col_main, col_heart = st.columns([6, 1])
     with col_main:
         code_display = c["code"] if c["code"] else "（品番未入力）"
         st.markdown(
@@ -485,10 +488,20 @@ elif st.session_state.page == "search":
     chosen_m = st.selectbox("メンバー", m_options)
     search_member = None if chosen_m == "（指定しない）" else chosen_m
 
-    search_input = st.text_input("品番を入力（例：ST-0231）", value=st.session_state.search_code)
+    if search_gid:
+        col_prefix, col_input = st.columns([1, 3])
+        with col_prefix:
+            st.markdown(f"**{PREFIX[search_gid]}-**")
+        with col_input:
+            suffix_input = st.text_input(
+                "品番（残りの番号）", placeholder="0231", label_visibility="collapsed"
+            )
+        full_code = f"{PREFIX[search_gid]}-{suffix_input.strip()}" if suffix_input.strip() else ""
+    else:
+        full_code = st.text_input("品番を入力（例：ST-0231）", value=st.session_state.search_code)
 
     if st.button("検索する", use_container_width=True):
-        st.session_state.search_code = search_input.strip()
+        st.session_state.search_code = full_code.strip()
         candidates = st.session_state.cards
         if search_gid:
             candidates = [c for c in candidates if c["group"] == search_gid]
