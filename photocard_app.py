@@ -139,14 +139,17 @@ st.title("🎀 所持写真一覧")
 nav1, nav2, nav3 = st.columns(3)
 with nav1:
     if st.button("📋 一覧", use_container_width=True, type="primary" if st.session_state.page == "list" else "secondary"):
+        close_all_dialogs()
         st.session_state.page = "list"
         st.rerun()
 with nav2:
     if st.button("🔍 品番検索", use_container_width=True, type="primary" if st.session_state.page == "search" else "secondary"):
+        close_all_dialogs()
         st.session_state.page = "search"
         st.rerun()
 with nav3:
     if st.button("♡ お気に入り", use_container_width=True, type="primary" if st.session_state.page == "favorites" else "secondary"):
+        close_all_dialogs()
         st.session_state.page = "favorites"
         st.rerun()
 
